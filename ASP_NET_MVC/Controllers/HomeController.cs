@@ -10,6 +10,8 @@ namespace ASP_NET_MVC.Controllers
     {
         public ActionResult Index()
         {
+            //string msg = null;
+            //ViewBag.msg = msg.Length;
             return View();
         }
 

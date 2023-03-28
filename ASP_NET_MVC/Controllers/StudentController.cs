@@ -18,7 +18,7 @@ namespace ASP_NET_MVC.Controllers
         // GET: Student
         public ActionResult Index()
         {
-            return View(studentList);
+            return View(studentList.OrderBy(s => s.StudentID).ToList());
         }
 
         //Action Selectors
@@ -43,15 +43,30 @@ namespace ASP_NET_MVC.Controllers
         [HttpPost]
         public ActionResult Edit(Student std)
         {
+            if(ModelState.IsValid)
+            {
+                //update student in DB using EntityFramework in real-life application
 
-            //update student in DB using EntityFramework in real-life application
+                //update list by removing old student and adding updated student for demo purpose
+                var student = studentList.Where(s => s.StudentID == std.StudentID).FirstOrDefault();
+                //studentList.Remove(student);
+                bool studentExists = studentList.Where(s => s.StudentID == std.StudentID).FirstOrDefault() != null;
 
-            //update list by removing old student and adding updated student for demo purpose
-            var student = studentList.Where(s => s.StudentID == std.StudentID).FirstOrDefault();
-            studentList.Remove(student);
-            studentList.Add(student);
+               
+                if(studentExists)
+                {
+                    ModelState.AddModelError("StudentName", "Student Already Exists.");
+                    return View(std);
+                }
 
-            return RedirectToAction("Index");
+                studentList.Add(std);
+
+
+                return RedirectToAction("Index");
+            }
+
+            return View(std);
+            
         }
     }
 }
